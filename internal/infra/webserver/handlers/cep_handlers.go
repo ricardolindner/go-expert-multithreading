@@ -21,32 +21,32 @@ func GetCepHandler(w http.ResponseWriter, r *http.Request, cep string) {
 	case msg := <-resultCh:
 		fmt.Fprintln(w, msg)
 	case <-ctx.Done():
-		http.Error(w, "❌ Timeout fetching CEP information", http.StatusGatewayTimeout)
+		http.Error(w, "Timeout fetching CEP information", http.StatusGatewayTimeout)
 	}
 }
 
 func fetchFromAPI(ctx context.Context, apiName, url string, ch chan<- string) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		ch <- fmt.Sprintf("❌ Error in request %s: %v", apiName, err)
+		ch <- fmt.Sprintf("Error in request %s: %v", apiName, err)
 		return
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		ch <- fmt.Sprintf("❌ Error in request %s: %v", apiName, err)
+		ch <- fmt.Sprintf("Error in request %s: %v", apiName, err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		ch <- fmt.Sprintf("❌ Error fetching data from %s: %v", apiName, err)
+		ch <- fmt.Sprintf("Error fetching data from %s: %v", apiName, err)
 		return
 	}
 
 	select {
-	case ch <- fmt.Sprintf("✅ Winning API: %s\n%s", apiName, string(body)):
+	case ch <- fmt.Sprintf("Results from API: %s\n%s", apiName, string(body)):
 	case <-ctx.Done():
 	}
 }
