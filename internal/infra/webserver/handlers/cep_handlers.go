@@ -34,7 +34,6 @@ func fetchFromAPI(ctx context.Context, apiName, url string, ch chan<- string) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		// Pode ser erro de timeout, cancelamento, DNS, etc.
 		ch <- fmt.Sprintf("❌ Error in request %s: %v", apiName, err)
 		return
 	}
