@@ -49,4 +49,5 @@ func fetchFromAPI(ctx context.Context, apiName, url string, ch chan<- string) {
 	case ch <- fmt.Sprintf("Results from API: %s\n%s", apiName, string(body)):
 	case <-ctx.Done():
 	}
+
 }
